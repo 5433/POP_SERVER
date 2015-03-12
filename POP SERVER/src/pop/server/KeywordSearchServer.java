@@ -117,8 +117,9 @@ public class KeywordSearchServer{
             while (true) {
                 lock.lock();
                 try {
-                    if(!clientListener.messageM.isEmpty())
-                        textAr.setText(clientListener.messageM);
+                    //if(!clientListener.messageM.isEmpty())
+                        //textAr.setText(clientListener.messageM);
+                        textAr.setText(ServerDispatcher.castMessage);
                     
                     if (clientListener.messageM.contains("create")) {
                         setForum(true);

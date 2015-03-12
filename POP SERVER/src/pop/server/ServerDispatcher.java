@@ -6,6 +6,7 @@ import java.util.*;
 public class ServerDispatcher extends Thread
 
 {
+    static String castMessage = "";
 	//array of messages
     private Vector mMessageQueue = new Vector();
 	//array of clients
@@ -144,7 +145,8 @@ public class ServerDispatcher extends Thread
      * to all clients connected to the server.
 
      */
-
+    
+    @Override
     public void run()
 
     {
@@ -157,6 +159,7 @@ public class ServerDispatcher extends Thread
 
                sendMessageToAllClients(message);
 
+               castMessage = message;
            }
 
         } catch (InterruptedException ie) {
