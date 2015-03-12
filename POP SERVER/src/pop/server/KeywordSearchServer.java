@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class KeywordSearchServer{
 
-	String temp = "";
+	static volatile String temp = "";
 	JFrame frame = new JFrame("Server");
 	JPanel panel = new JPanel();
 	JTextArea textAr = new JTextArea();
@@ -40,7 +40,7 @@ public class KeywordSearchServer{
             drawWindow();	
         try{
             server = new ServerSocket(i);   
-            System.out.println("This is the " + name + " server, listening on port: " + i);
+            System.out.println("This is the" + name + " server, listening on port: " + i);
         }catch(IOException e){
         }
         // Start ServerDispatcher thread             
@@ -116,10 +116,7 @@ public class KeywordSearchServer{
                     textAr.setText(clientListener.messageM);
                     if (clientListener.messageM.contains("create")) {
                         setForum(true);
-                        //System.out.println(newForum);
-                        //temp = clientListener.messageM.replace("create", "");
-                        //System.out.println(temp);
-
+                        temp = clientListener.messageM;       
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();
