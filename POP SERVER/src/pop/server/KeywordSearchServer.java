@@ -119,7 +119,7 @@ public class KeywordSearchServer{
                 try {
                     //if(!clientListener.messageM.isEmpty())
                         //textAr.setText(clientListener.messageM);
-                        textAr.setText(ServerDispatcher.castMessage);
+                        textAr.setText(serverDispatcher.castMessage);
                     
                     if (clientListener.messageM.contains("create")) {
                         setForum(true);

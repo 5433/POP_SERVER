@@ -6,7 +6,7 @@ import java.util.*;
 public class ServerDispatcher extends Thread
 
 {
-    static String castMessage = "";
+    public volatile String castMessage = "";
 	//array of messages
     private Vector mMessageQueue = new Vector();
 	//array of clients
