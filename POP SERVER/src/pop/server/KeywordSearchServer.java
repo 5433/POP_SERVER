@@ -3,11 +3,14 @@ package pop.server;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.*;
 
 public class KeywordSearchServer{
 
+        private Lock lock = new ReentrantLock();
 	static volatile String temp = "";
 	JFrame frame = new JFrame("Server");
 	JPanel panel = new JPanel();
@@ -26,7 +29,7 @@ public class KeywordSearchServer{
  		return clientListener.messageM;
  	}
 	
- 	public void setForum(boolean bool){
+ 	public synchronized void setForum(boolean bool){
  		
 		newForum = bool;
  			
@@ -112,14 +115,19 @@ public class KeywordSearchServer{
         @Override
         public void run() {
             while (true) {
+                lock.lock();
                 try {
-                    textAr.setText(clientListener.messageM);
+                    if(!clientListener.messageM.isEmpty())
+                        textAr.setText(clientListener.messageM);
+                    
                     if (clientListener.messageM.contains("create")) {
                         setForum(true);
-                        temp = clientListener.messageM;       
+                        temp = clientListener.messageM; 
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();
+                }finally{
+                    lock.unlock();
                 }
 
             }

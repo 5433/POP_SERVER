@@ -36,7 +36,7 @@ public final class MainDomain{
 	class NewRunThread implements Runnable{
             @Override
             public void run(){
-		kss = new KeywordSearchServer(i,"Main");
+		kss = new KeywordSearchServer(i," Main");
             }
 	}
 	
