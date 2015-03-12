@@ -1,9 +1,5 @@
 package pop.server;
 
-import java.net.*;
-import java.io.*;
-import java.util.HashMap;
-
 public final class MainDomain{
 	
 	int i = 8888;
@@ -23,14 +19,14 @@ public final class MainDomain{
 		while(true){			
 			try{
 				//System.out.println("In while loop");			
-				if(kss.newForum == true){					 
+				if(KeywordSearchServer.newForum == true){					 
 					System.out.println("In if statement");					
-					i++;
+					//i++;
 					//System.out.println("1");						
 					//mes = kss.temp;			
 					//System.out.println("2");			
 					//System.out.println("before kes");
-					KeywordSearchServer kes = new KeywordSearchServer(i,"something");
+					KeywordSearchServer kes = new KeywordSearchServer(9999,"something");
 					//serverCollector.put(i,kes);
 				}		
 			}catch(NullPointerException e){
@@ -40,9 +36,10 @@ public final class MainDomain{
 	}
 	
 	class NewRunThread implements Runnable{
-		public void run(){
-			kss = new KeywordSearchServer(i,"Main");
-		}
+            @Override
+            public void run(){
+		kss = new KeywordSearchServer(i,"Main");
+            }
 	}
 	
 }

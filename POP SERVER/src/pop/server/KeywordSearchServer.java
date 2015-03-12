@@ -12,7 +12,7 @@ public class KeywordSearchServer{
 	JFrame frame = new JFrame("Server");
 	JPanel panel = new JPanel();
 	JTextArea textAr = new JTextArea();
-	static boolean newForum = false;
+	static volatile boolean newForum = false;
 	ServerDispatcher serverDispatcher = new ServerDispatcher();
 	ServerSocket server;
 	ClientListener clientListener;
@@ -36,13 +36,12 @@ public class KeywordSearchServer{
 		return newForum;
 	}
 	
- 	public void connector(int i, String name){
-		drawWindow();	
+ 	private void connector(int i, String name){
+            drawWindow();	
         try{
-			server = new ServerSocket(i);
-			System.out.println("This is the " + name + " server, listening on port: " + i);
+            server = new ServerSocket(i);   
+            System.out.println("This is the " + name + " server, listening on port: " + i);
         }catch(IOException e){
-        	e.printStackTrace();
         }
         // Start ServerDispatcher thread             
 
@@ -89,9 +88,6 @@ public class KeywordSearchServer{
 			   		   		  
 			   
            } catch (IOException ioe) {
-
-               ioe.printStackTrace();
-
            }
 
         }
@@ -111,22 +107,27 @@ public class KeywordSearchServer{
 		
 	}
 	
-	
-	class ThreadText implements Runnable{
-		public void run(){
-			while(true){								
-				try{
-					textAr.setText(clientListener.messageM);
-					if(clientListener.messageM.contains("create")){	
-						setForum(true);							
-					}
-				}catch(Exception e){
-					//e.printStackTrace();
-				}
-				
-			}
-		}
-	}
+    class ThreadText implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    textAr.setText(clientListener.messageM);
+                    if (clientListener.messageM.contains("create")) {
+                        setForum(true);
+                        //System.out.println(newForum);
+                        //temp = clientListener.messageM.replace("create", "");
+                        //System.out.println(temp);
+
+                    }
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                }
+
+            }
+        }
+    }
 	
 	
 }

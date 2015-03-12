@@ -9,7 +9,7 @@ import java.net.*;
 public class ClientListener extends Thread
 
 {
-	String messageM = "";
+    String messageM = "";
 
     private ServerDispatcher mServerDispatcher;
 
@@ -61,7 +61,7 @@ public class ClientListener extends Thread
 
                String message = mIn.readLine();
 			   //messageM += message + "\r\n";
-			   messageM = message;
+	       messageM = message;
 			   
                if (message == null)
 
