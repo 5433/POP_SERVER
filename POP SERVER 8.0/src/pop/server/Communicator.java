@@ -8,24 +8,23 @@ import java.util.*;
  *
  * @author Anmar Hindi
  */
-public class ResultCommunicator extends Thread {
+public class Communicator extends Thread {
 
     private ArrayList messagesToSend = new ArrayList();
-    private ResultLogger resultLogger;
+    private MessageLogger messageLogger;
     private PrintWriter printer;
     private Socket socket;
     private BufferedReader br;
     String receivedM = "";
-    int threadPort;
-    int deviceAddress;
+    String nextMessageTemp = "";
 
-    public ResultCommunicator(Socket s, ResultLogger ml) throws IOException {
-        resultLogger = ml;
+    public Communicator(Socket s, MessageLogger ml) throws IOException {
+        messageLogger = ml;
         socket = s;
         printer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        ChoiceListener choiceListener = new ChoiceListener();
-        choiceListener.start();
+        Listens listens = new Listens();
+        listens.start();
     }
 
     public String getMessage() {
@@ -51,19 +50,15 @@ public class ResultCommunicator extends Thread {
 
     //send String message to Device using PrintWriter.
     private void sendMessageToDevice(String text) {
-        if (threadPort > 7777) {
-            printer.println(threadPort + "\t");
-        }
+        nextMessageTemp = text;
         printer.println(text);
         printer.flush();
-
     }
 
     @Override
     public void run() {
         try {
             while (!isInterrupted()) {
-                resultLogger.postMessage();
                 String message = nextElementToSend();
                 sendMessageToDevice(message);
             }
@@ -72,43 +67,35 @@ public class ResultCommunicator extends Thread {
         }
 
         try {
-            resultLogger.getResultCommunicator(socket).interrupt();
-            resultLogger.removeResultCommunicator(socket);
+            messageLogger.getCommunicator(socket).interrupt();
+            messageLogger.removeCommunicator(socket);
         } catch (NullPointerException e) {
 
         }
     }
 
-    class ChoiceListener extends Thread {
+    class Listens extends Thread {
 
         @Override
         public void run() {
             try {
-                while (true) {
-                    String message="";
-                    message = br.readLine();
-                    if (message == null) {
-                        message = "";
-                    }
+                while (!isInterrupted()) {
+                    String message = br.readLine();
                     //messageM += message + "\r\n";
                     receivedM = message;
-                    for (int i = 0; i < MainDomain.serverCollector.size(); i++) {
-                        KeywordSearchServer temp = MainDomain.serverCollector.get(i);
-                        if (temp.name.equals(message)) {
-                            threadPort = temp.port;
-                            //resultLogger.setPort("" + threadPort);
-                        }
+                    if (message == null) {
+                        break;
                     }
+                    messageLogger.postMessage(message);
                 }
-            } catch (IOException | NullPointerException ioex) {
+            } catch (IOException ioex) {
                 // could not read from socket
             }
 
             // Broken. Interrupt both listener and sender threads.
-            resultLogger.getResultCommunicator(socket).interrupt();
-            resultLogger.removeResultCommunicator(socket);
+            messageLogger.getCommunicator(socket).interrupt();
+            messageLogger.removeCommunicator(socket);
 
         }
     }
-
 }
